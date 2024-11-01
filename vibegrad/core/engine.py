@@ -99,5 +99,25 @@ class Tensor:
     def __rtruediv__(self, other): # other / self
         return other * self**-1
 
+    def __matmul__(self, other):
+        other = other if isinstance(other, Tensor) else Tensor(other)
+        out = Tensor(
+            np.matmul(self.data, other.data),
+            (self, other),
+            "@"
+        )
+
+        def _backward():
+            # For matrix multiplication C = A @ B:
+            # dL/dA = dL/dC @ B.T
+            # dL/dB = A.T @ dL/dC
+            self.grad = np.matmul(out.grad, other.data.T)
+            other.grad = np.matmul(self.data.T, out.grad)
+        self.backward = _backward
+        return out
+
+    def __rmatmul__(self, other):
+        return Tensor(other) @ self
+
     def zero_grad(self):
         self.grad = float(0.0)

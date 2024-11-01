@@ -20,8 +20,6 @@ class Sequential:
         total_param = 0
         for layer in self.layers:
             total_param += layer.total_params()
-            # for p in layer.parameters():
-                # total_param += p.data
                 
         return total_param
 
