@@ -7,8 +7,8 @@ class ReLU:
     def __init__(self) -> None:
         pass
 
-    def __call__(self) -> Tensor:
-        return relu(self)
+    def __call__(self, x:Tensor) -> Tensor:
+        return relu(x)
 
     def total_params(self):
         return 0
