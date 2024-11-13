@@ -25,3 +25,16 @@ def tanh(tensor: Tensor) -> Tensor:
     out._backward = _backward
     
     return out
+
+def sigmoid(tensor:Tensor) -> Tensor:
+    out = Tensor(
+        1/(1 + np.exp(-tensor.data)),
+        (tensor,),
+        "sigmoid"
+    )
+
+    def _backward():
+        tensor.grad = out.data * (1-out.data) * out.grad
+    out._backward = _backward
+    
+    return out
