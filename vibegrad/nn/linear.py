@@ -10,10 +10,12 @@ class Linear:
         self.weight = Tensor(
             np.random.uniform(size=(fan_in, fan_out)) / fan_in**0.5 
         )
-        self.bias = np.zeros(fan_out) if bias else None
+        self.bias = Tensor(
+            np.zeros(fan_out) if bias else None
+        )
 
     def __repr__(self) -> str:
-         return f"Linear({self.fan_in}, {self.fan_out}, bias={self.bias_enabled}) "
+         return f"\nLinear({self.fan_in}, {self.fan_out}, bias={self.bias_enabled}) "
   
     def __call__(self, x:Tensor):
         self.out = x @ self.weight

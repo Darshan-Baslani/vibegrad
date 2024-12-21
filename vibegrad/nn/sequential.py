@@ -3,9 +3,9 @@ import numpy as np
 
 
 class Sequential:
-    def __init__(self, layers):
+    def __init__(self, layers:list):
         self.layers = layers
-        self.parameters = self._get_params()
+        self.parameters = self.parameters()
 
     def __call__(self, X):
         for layer in self.layers:

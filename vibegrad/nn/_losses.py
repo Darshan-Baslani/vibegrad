@@ -7,6 +7,7 @@ def _check_binary(pred:Tensor, actual:Tensor):
             if p != 1 and p != 0:
                 raise ValueError("Values must be 0 or 1")
 
+
 class BCELoss:
     def __init__(self, reduction:str = "mean"):
         """
@@ -41,4 +42,51 @@ class BCELoss:
         loss._backward = _backward
 
         return loss
+
         
+class CrossEntropyLoss:
+    def __init__(self, reduction:str = "mean"):
+        """
+        Cross Entropy Loss
+
+        Args:
+            reduction (str, optional): "mean" or "sum". Defaults to "mean".
+        """
+        self.reduction = reduction
+
+    def __call__(self, pred:Tensor, actual:Tensor) -> Tensor:
+        # Applying softmax to pred
+        exp_logits = np.exp(pred.data - np.max(pred.data, keepdims=True)) # stability trick
+        probs = exp_logits / np.sum(exp_logits, axis=1, keepdims=True)
+
+        # Cross Entropy only accepts data in one-hot encoded format
+        if len(actual.data.shape == 1): # class-indices
+            one_hot_actual = np.zeros_like(probs)
+            one_hot_actual[np.arange(actual.data.shape[0]), actual.data] = 1
+        else: # already one-hot
+            one_hot_actual = actual.data
+            
+        pre_loss = -np.sum(one_hot_actual * np.log(probs + 1e-5))
+        
+        if self.reduction == "mean":
+            # bce_loss = bce_loss / pred_clipped.shape[0]
+            ce_loss = np.mean(pre_loss)
+        elif self.reduction == 'sum':
+            ce_loss = np.sum(pre_loss)
+        else:
+            raise ValueError("Invalid reduction type. Use 'mean' or 'sum'")
+        
+        loss = Tensor(
+            ce_loss,
+            (pred, actual),
+            "CrossEntropy Loss"
+        )
+            
+        def _backward():
+            grad_logits = probs - one_hot_actual
+            if self.reduction == 'mean':
+                grad_logits = grad_logits / pred.data.shape[0]
+            pred.grad += grad_logits
+        loss._backward = _backward
+        
+        return loss
