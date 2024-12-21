@@ -38,3 +38,20 @@ def sigmoid(tensor:Tensor) -> Tensor:
     out._backward = _backward
     
     return out
+
+    
+def softmax(tensor:Tensor) -> Tensor:
+    # below we are using stablility trick by subtracting the max value
+    # this is done to avoid calculations of huge tensors
+    exp_logits = np.exp(tensor.data - np.max(tensor.data, keepdims=True))
+    out = Tensor(
+        exp_logits / np.sum(exp_logits, keepdims=True),
+        (tensor,),
+        "softmax"
+    )
+
+    # TODO: add backward pass
+    def _backwar():
+        pass
+    return out
+    
