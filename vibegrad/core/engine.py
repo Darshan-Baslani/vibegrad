@@ -2,9 +2,8 @@ import numpy as np
 
 class Tensor:
     def __init__(self, data, _children=(), _op='', label=''):
-        self.data = data
-        self.data = _to_np_array(self)
-        self.grad = 0.0
+        self.data = np.array(data, dtype=np.float64) if not isinstance(data, np.ndarray) else data
+        self.grad = np.zeros_like(self.data, dtype=np.float64)
         self._prev = set(_children)
         self._op = _op
         self.label = label
@@ -123,8 +122,3 @@ class Tensor:
         self.grad = float(0.0)
         
         
-def _to_np_array(data:Tensor) -> Tensor:
-    if type(data.data) == 'numpy.ndarray':
-        return data
-    else:
-        return np.array(data.data)

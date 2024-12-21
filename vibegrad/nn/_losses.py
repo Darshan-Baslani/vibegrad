@@ -27,13 +27,13 @@ class BCELoss:
         self.pred = pred
         self.actual = actual
 
-        bce_loss = -(actual.data * np.log(pred_clipped) + (1-actual.data) * np.log(1-pred_clipped))
+        bce_loss = Tensor(-(actual.data * np.log(pred_clipped) + (1-actual.data) * np.log(1-pred_clipped)))
 
         if self.reduction == "mean":
             # bce_loss = bce_loss / pred_clipped.shape[0]
             bce_loss = np.mean(bce_loss.data)
         else:
-            bce_loss = np.sum(bce_loss)
+            bce_loss = np.sum(bce_loss.data)
 
         self.out = Tensor(bce_loss, (pred, actual), "bce_loss")
         return bce_loss
