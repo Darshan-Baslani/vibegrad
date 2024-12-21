@@ -1,9 +1,9 @@
 import numpy as np
 
-
 class Tensor:
     def __init__(self, data, _children=(), _op='', label=''):
         self.data = data
+        self.data = _to_np_array(self)
         self.grad = 0.0
         self._prev = set(_children)
         self._op = _op
@@ -121,3 +121,10 @@ class Tensor:
 
     def zero_grad(self):
         self.grad = float(0.0)
+        
+        
+def _to_np_array(data:Tensor) -> Tensor:
+    if type(data.data) == 'numpy.ndarray':
+        return data
+    else:
+        return np.array(data.data)
