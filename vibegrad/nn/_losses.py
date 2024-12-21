@@ -24,16 +24,21 @@ class BCELoss:
         epsilon = 1e-15
         pred_clipped = np.clip(pred.data, epsilon, 1-epsilon)
 
-        self.pred = pred
-        self.actual = actual
-
-        bce_loss = Tensor(-(actual.data * np.log(pred_clipped) + (1-actual.data) * np.log(1-pred_clipped)))
+        bce_loss = -(actual.data * np.log(pred_clipped) + (1-actual.data) * np.log(1-pred_clipped))
 
         if self.reduction == "mean":
             # bce_loss = bce_loss / pred_clipped.shape[0]
             bce_loss = np.mean(bce_loss.data)
-        else:
+        elif self.reduction == 'sum':
             bce_loss = np.sum(bce_loss.data)
+        else:
+            raise ValueError("Invalid reduction type. Use 'mean' or 'sum'")
 
-        self.out = Tensor(bce_loss, (pred, actual), "bce_loss")
-        return bce_loss
+        loss = Tensor(bce_loss, (pred, actual), "bce_loss") 
+        def _backward():
+            grad_pred = -(actual.data / pred_clipped - (1 - actual.data) / (1 - pred_clipped))
+            pred.grad += grad_pred * loss.grad
+        loss._backward = _backward
+
+        return loss
+        
