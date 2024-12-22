@@ -38,7 +38,8 @@ class BCELoss:
         loss = Tensor(bce_loss, (pred, actual), "bce_loss") 
         def _backward():
             grad_pred = -(actual.data / pred_clipped - (1 - actual.data) / (1 - pred_clipped))
-            pred.grad += grad_pred * loss.grad
+            # pred.grad += grad_pred * loss.grad
+            pred.grad += grad_pred
         loss._backward = _backward
 
         return loss
@@ -90,3 +91,15 @@ class CrossEntropyLoss:
         loss._backward = _backward
         
         return loss
+
+        
+class MSELoss:
+    def __init__(self):
+        pass
+    
+    def __call__(self, pred:Tensor, actual:Tensor):
+        return Tensor(
+            np.mean((pred.data - actual.data)**2),
+            (pred, actual),
+            "MSELoss"
+        )
