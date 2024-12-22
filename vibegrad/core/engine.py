@@ -8,6 +8,7 @@ class Tensor:
         self._op = _op
         self.label = label
         self._backward = lambda : None
+        self.shape = self.data.shape    
 
     def __repr__(self) -> str:
         return f"Tensor(data={self.data})"
@@ -17,8 +18,12 @@ class Tensor:
         out = Tensor(self.data+other.data, (self, other), '+')
 
         def _backward():
-            self.grad += 1.0 * out.grad
-            other.grad += 1.0 * out.grad
+            if self.shape != other.shape:
+                other.data = np.broadcast_to(other.data, self.shape)
+                other.grad = np.broadcast_to(other.grad, self.grad.shape)
+            self.grad += out.grad
+            other.grad.setflags(write=True)
+            other.grad += out.grad
         out._backward = _backward
         
         return out
@@ -112,7 +117,7 @@ class Tensor:
             # dL/dB = A.T @ dL/dC
             self.grad = np.matmul(out.grad, other.data.T)
             other.grad = np.matmul(self.data.T, out.grad)
-        self.backward = _backward
+        out.backward = _backward
         return out
 
     def __rmatmul__(self, other):
