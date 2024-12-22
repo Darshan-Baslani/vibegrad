@@ -18,10 +18,10 @@ class Linear:
          return f"\nLinear({self.fan_in}, {self.fan_out}, bias={self.bias_enabled}) "
   
     def __call__(self, x:Tensor):
-        self.out = x @ self.weight
+        out = x @ self.weight
         if self.bias is not None:
-                self.out += self.bias
-        return self.out
+                out += self.bias
+        return out
   
     def parameters(self):
         return [self.weight] + ([] if self.bias is None else [self.bias])
