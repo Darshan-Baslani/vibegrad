@@ -56,7 +56,7 @@ class Tensor:
         return out
 
     def relu(self):
-        out = Tensor(0 if self.data < 0 else self.data, (self,), 'ReLU')
+        out = Tensor(np.maximum(0, self.data), (self,), 'ReLU')
 
         def _backward():
             self.grad += (out.data > 0) * out.grad
@@ -78,7 +78,7 @@ class Tensor:
         build_topo(self)
 
         # go one variable at a time and apply the chain rule to get its gradient
-        self.grad = 1
+        self.grad = np.ones_like(self.data)
         for v in reversed(topo):
             v._backward()
 
@@ -124,6 +124,5 @@ class Tensor:
         return Tensor(other) @ self
 
     def zero_grad(self):
-        self.grad = float(0.0)
-        
+       self.grad = np.zeros_like(self.data)
         
