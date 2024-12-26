@@ -115,9 +115,16 @@ class Tensor:
             # For matrix multiplication C = A @ B:
             # dL/dA = dL/dC @ B.T
             # dL/dB = A.T @ dL/dC
-            self.grad = np.matmul(out.grad, other.data.T)
-            other.grad = np.matmul(self.data.T, out.grad)
-        out.backward = _backward
+            if isinstance(self.grad, np.ndarray):
+                self.grad += np.matmul(out.grad, other.data.T)
+            else:
+                self.grad = np.matmul(out.grad, other.data.T)
+                
+            if isinstance(other.grad, np.ndarray):
+                other.grad += np.matmul(self.data.T, out.grad)
+            else:
+                other.grad = np.matmul(self.data.T, out.grad)
+        out._backward = _backward
         return out
 
     def __rmatmul__(self, other):
