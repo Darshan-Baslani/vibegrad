@@ -6,12 +6,13 @@ MicroGrad is a minimal, educational automatic differentiation library implemente
 
 ## Features
 
-- Forward and reverse-mode automatic differentiation
-- Support for basic mathematical operations (+, -, *, /, pow)
-- Dynamic computational graph construction
-- Gradient computation through the chain rule
-- Visualization of computational graphs
-- Zero memory leaks - proper garbage collection of computational graphs
+- *Automatic Differentiation*: Vibegrad automatically computes gradients, making it easy to implement backpropagation.
+
+- *Tensor Operations*: Supports basic tensor operations necessary for building and training models.
+
+- *Optimization*: Includes common optimization algorithms like Stochastic Gradient Descent (SGD).
+
+- *Loss Functions*: Provides essential loss functions such as Binary Cross-Entropy Loss (BCELoss).
 
 ## Quick Start
 ```python
