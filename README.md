@@ -1,7 +1,7 @@
 # MicroGrad: A Lightweight Automatic Differentiation Library
 
 ## Overview
-![Local Image](/media/nuclea/Code/vibegrad/vibegrad.png "Local Image")
+![Local Image](https://github.com/Darshan-Baslani/vibegrad/blob/main/vibegrad.png "Local Image")
 MicroGrad is a minimal, educational automatic differentiation library implemented from scratch in Python. It provides a computational graph-based approach to computing gradients, making it perfect for building and understanding neural networks from the ground up.
 
 ## Features
