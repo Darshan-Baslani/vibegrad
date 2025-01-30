@@ -1,4 +1,4 @@
-# MicroGrad: A Lightweight Automatic Differentiation Library
+# VibeGrad: A Lightweight Automatic Differentiation Library
 
 ## Overview
 ![Local Image](https://github.com/Darshan-Baslani/vibegrad/blob/main/vibegrad.png "Local Image")
